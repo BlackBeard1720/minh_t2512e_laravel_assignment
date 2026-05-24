@@ -115,7 +115,7 @@
                         <td class="border px-3 py-2">{{ $account->updated_at }}</td>
                         <td class="border px-3 py-2">
                             <div class="flex gap-2">
-                                <a href="#"
+                                <a href="{{ route('accounts.edit', $account->id) }}"
                                    class="rounded bg-yellow-400 px-3 py-1 text-white hover:bg-yellow-500">
                                     Edit
                                 </a>

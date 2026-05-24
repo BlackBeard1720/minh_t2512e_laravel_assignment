@@ -7,9 +7,6 @@ use Illuminate\Http\Request;
 
 class BankAccountController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         $query = BankAccount::query();
@@ -41,17 +38,11 @@ class BankAccountController extends Controller
         return view('index', ['accounts' => $accounts]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -67,14 +58,36 @@ class BankAccountController extends Controller
         return to_route('accounts.index')->with('success', 'Account created successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    public function edit(string $id)
+    {
+        $account = BankAccount::findOrFail($id);
+
+        return view('edit', ['account' => $account]);
+    }
+
+    public function update(Request $request, string $id)
+    {
+        $account = BankAccount::findOrFail($id);
+
+        $data = $request->validate([
+            'account_number' => 'required|digits:10|unique:bank_accounts,account_number,' . $account->id,
+            'full_name' => 'required',
+            'email' => 'required|email|max:255|unique:bank_accounts,email,' . $account->id,
+            'phone' => 'required|max:20',
+            'balance' => 'required|numeric|min:10000|max:500000000',
+            'status' => 'required|in:active,inactive,banned',
+        ]);
+
+        $account->update($data);
+
+        return to_route('accounts.index')->with('success', 'Account updated successfully.');
+    }
+
     public function destroy(string $id)
     {
         $account = BankAccount::findOrFail($id);
         $account->delete();
 
-        return back()->with('success', 'Account deleted!');
+        return back()->with('success', 'Account deleted successfully!');
     }
 }

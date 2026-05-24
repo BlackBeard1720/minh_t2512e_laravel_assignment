@@ -19,13 +19,18 @@ class BankAccountFactory extends Factory
     public function definition(): array
     {
         $faker = Faker::create('vi_VN');
+
+        $createdAt = fake()->dateTimeBetween('-6 months', 'now');
+
         return [
             'account_number' => $faker->unique()->numerify('##########'),
             'full_name' => $faker->name(),
             'email' => $faker->unique()->safeEmail(),
             'phone' => $faker->phoneNumber(),
             'balance' => $faker->numberBetween(10000, 500000000),
-            'status' => $faker->randomElement(['active', 'inactive', 'banned'])
+            'status' => $faker->randomElement(['active', 'inactive', 'banned']),
+            'created_at' => $createdAt,
+            'updated_at' => $createdAt,
         ];
     }
 }
